@@ -38,6 +38,8 @@ const repos = {
 make
   .command("build")
   .action(async () => {
+    // todo: add validation and making a report to the issues (in CI only).
+
     // todo: rewrite it.
     const rawMeta = await fetch("https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json")
     const meta = await rawMeta.json()
