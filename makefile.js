@@ -124,7 +124,7 @@ make
           createWriteStream(o1)
         ])
         l.on("finish", () => {
-          const o2 = join(dist, `${repo}.js`)
+          const o2 = join(dist, `${repo}.json`)
           const w = createWriteStream(o2)
           const s = spawn("jq", [".", o1])
           s.stdout.on("data", (chunk) => {
