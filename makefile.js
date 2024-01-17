@@ -114,6 +114,9 @@ make
               // todo: replace master with the commit hash.
               value.meta.path = value.meta.path.replace(inputDir, `https://github.com/onlyoffice/${repo}/blob/${commit}`)
             }
+            if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "code")) {
+              delete value.meta.code
+            }
             if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "vars")) {
               delete value.meta.vars
             }
