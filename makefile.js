@@ -149,6 +149,8 @@ make
       "sdkjs-forms": sdkjsFormsSHA
     }
     await writeFile(mf, JSON.stringify(mo, undefined, 2))
+
+    // todo: delete temp.
   })
 
 function downloadFile(u, f) {
