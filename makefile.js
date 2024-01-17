@@ -114,6 +114,9 @@ make
               // todo: replace master with the commit hash.
               value.meta.path = value.meta.path.replace(inputDir, `https://github.com/onlyoffice/${repo}/blob/${commit}`)
             }
+            if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "vars")) {
+              delete value.meta.vars
+            }
             if (Object.hasOwn(value, "files")) {
               value.files = value.files.map((file) => (
                 file.replace(inputDir, `https://github.com/onlyoffice/${repo}/blob/${commit}`)
