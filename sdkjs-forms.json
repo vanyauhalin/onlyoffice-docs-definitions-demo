@@ -3,7 +3,8 @@
     "comment": "/**\n\t * Base class\n\t * @global\n\t * @class\n\t * @name Api\n\t */",
     "meta": {
       "lineno": 48,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Base class",
     "scope": "global",
@@ -15,7 +16,8 @@
     "comment": "/**\n\t * Common form properties.\n\t * @typedef {Object} FormPrBase\n\t * @property {string} key - Form key.\n\t * @property {string} tip - Form tip text.\n\t * @property {boolean} required - Specifies if the form is required or not.\n\t * @property {string} placeholder - Form placeholder text.\n\t */",
     "meta": {
       "lineno": 56,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Common form properties.",
     "kind": "typedef",
@@ -70,7 +72,8 @@
     "comment": "/**\n\t * Specific text field properties.\n\t * @typedef {Object} TextFormPrBase\n\t * @property {boolean} comb - Specifies if the text field should be a comb of characters with the same cell width. The maximum number of characters must be set to a positive value.\n\t * @property {number} maxCharacters - The maximum number of characters in the text field.\n\t * @property {number} cellWidth - The cell width for each character measured in millimeters. If this parameter is not specified or equal to 0 or less, then the width will be set automatically.\n\t * @property {boolean} multiLine - Specifies if the current fixed size text field is multiline or not.\n\t * @property {boolean} autoFit - Specifies if the text field content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.\n\t */",
     "meta": {
       "lineno": 65,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Specific text field properties.",
     "kind": "typedef",
@@ -134,7 +137,8 @@
     "comment": "/**\n\t * Text field properties.\n\t * @typedef {FormPrBase | TextFormPrBase} TextFormPr\n\t */",
     "meta": {
       "lineno": 75,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Text field properties.",
     "kind": "typedef",
@@ -152,7 +156,8 @@
     "comment": "/**\n\t * Form insertion specific properties.\n\t * @typedef {Object} FormInsertPr\n\t * @property {boolean} [placeholderFromSelection=false] - Specifies if the currently selected text should be saved as a placeholder of the inserted form.\n\t * @property {boolean} [keepSelectedTextInForm=true] - Specifies if the currently selected text should be saved as the content of the inserted form.\n\t */",
     "meta": {
       "lineno": 80,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Form insertion specific properties.",
     "kind": "typedef",
@@ -193,7 +198,8 @@
     "comment": "/**\n\t * Properties for inserting a text field.\n\t * @typedef {FormPrBase | TextFormPrBase | FormInsertPr} TextFormInsertPr\n\t */",
     "meta": {
       "lineno": 87,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Properties for inserting a text field.",
     "kind": "typedef",
@@ -212,7 +218,8 @@
     "comment": "/**\n\t * Specific checkbox / radio button properties.\n\t * @typedef {Object} CheckBoxFormPrBase\n\t * @property {boolean} radio - Specifies if the current checkbox is a radio button. In this case, the key parameter is considered as an identifier for the group of radio buttons.\n\t */",
     "meta": {
       "lineno": 93,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Specific checkbox / radio button properties.",
     "kind": "typedef",
@@ -240,7 +247,8 @@
     "comment": "/**\n\t * Checkbox / radio button properties.\n\t * @typedef {FormPrBase | CheckBoxFormPrBase} CheckBoxFormPr\n\t */",
     "meta": {
       "lineno": 99,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Checkbox / radio button properties.",
     "kind": "typedef",
@@ -258,7 +266,8 @@
     "comment": "/**\n\t * Specific combo box / dropdown list properties.\n\t * @typedef {Object} ComboBoxFormPrBase\n\t * @property {boolean} editable - Specifies if the combo box text can be edited.\n\t * @property {boolean} autoFit - Specifies if the combo box form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.\n\t * @property {Array.<string | Array.<string>>} items - The combo box items.\n     * This array consists of strings or arrays of two strings where the first string is the displayed value and the second one is its meaning.\n     * If the array consists of single strings, then the displayed value and its meaning are the same.\n     * Example: [\"First\", [\"Second\", \"2\"], [\"Third\", \"3\"], \"Fourth\"].\n\n\t */",
     "meta": {
       "lineno": 104,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Specific combo box / dropdown list properties.",
     "kind": "typedef",
@@ -304,7 +313,8 @@
     "comment": "/**\n\t * Combo box / dropdown list properties.\n\t * @typedef {FormPrBase | ComboBoxFormPrBase} ComboBoxFormPr\n\t */",
     "meta": {
       "lineno": 116,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Combo box / dropdown list properties.",
     "kind": "typedef",
@@ -322,7 +332,8 @@
     "comment": "/**\n\t * The condition to scale an image in the picture form.\n\t * @typedef {\"always\" | \"never\" | \"tooBig\" | \"tooSmall\"} ScaleFlag\n\t */",
     "meta": {
       "lineno": 121,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "The condition to scale an image in the picture form.",
     "kind": "typedef",
@@ -342,7 +353,8 @@
     "comment": "/**\n\t * Value from 0 to 100.\n\t * @typedef {number} percentage\n\t */",
     "meta": {
       "lineno": 126,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Value from 0 to 100.",
     "kind": "typedef",
@@ -359,7 +371,8 @@
     "comment": "/**\n\t * Specific picture form properties.\n\t * @typedef {Object} PictureFormPrBase\n\t * @property {ScaleFlag} scaleFlag - The condition to scale an image in the picture form: \"always\", \"never\", \"tooBig\" or \"tooSmall\".\n\t * @property {boolean} lockAspectRatio - Specifies if the aspect ratio of the picture form is locked or not.\n\t * @property {boolean} respectBorders - Specifies if the form border width is respected or not when scaling the image.\n\t * @property {percentage} shiftX - Horizontal picture position inside the picture form measured in percent:\n\t * * <b>0</b> - the picture is placed on the left;\n\t * * <b>50</b> - the picture is placed in the center;\n\t * * <b>100</b> - the picture is placed on the right.\n\t * @property {percentage} shiftY - Vertical picture position inside the picture form measured in percent:\n\t * * <b>0</b> - the picture is placed on top;\n\t * * <b>50</b> - the picture is placed in the center;\n\t * * <b>100</b> - the picture is placed on the bottom.\n\t */",
     "meta": {
       "lineno": 131,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Specific picture form properties.",
     "kind": "typedef",
@@ -423,7 +436,8 @@
     "comment": "/**\n\t * Picture form properties.\n\t * @typedef {FormPrBase | PictureFormPrBase} PictureFormPr\n\t */",
     "meta": {
       "lineno": 147,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Picture form properties.",
     "kind": "typedef",
@@ -445,7 +459,8 @@
         7117
       ],
       "lineno": 158,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Creates a text field with the specified text field properties.",
     "memberof": "Api",
@@ -482,7 +497,8 @@
         9341
       ],
       "lineno": 174,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Creates a checkbox / radio button with the specified checkbox / radio button properties.",
     "memberof": "Api",
@@ -519,7 +535,8 @@
         10886
       ],
       "lineno": 244,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Creates a combo box / dropdown list with the specified combo box / dropdown list properties.",
     "memberof": "Api",
@@ -556,7 +573,8 @@
         12319
       ],
       "lineno": 309,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Creates a picture form with the specified picture form properties.",
     "memberof": "Api",
@@ -593,7 +611,8 @@
         13345
       ],
       "lineno": 348,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Inserts a text box with the specified text box properties over the selected text.",
     "memberof": "ApiDocument",
@@ -626,7 +645,8 @@
     "comment": "/**\n     * @typedef {Object} ContentControl\n\t * Content control object.\n     * @property {string} Tag - A tag assigned to the content control. The same tag can be assigned to several content controls so that it is possible to make reference to them in your code.\n     * @property {string} Id - A unique identifier of the content control. It can be used to search for a certain content control and make reference to it in the code.\n     * @property {ContentControlLock} Lock - A value that defines if it is possible to delete and/or edit the content control or not: 0 - only deleting, 1 - no deleting or editing, 2 - only editing, 3 - full access.\n     * @property {string} InternalId - A unique internal identifier of the content control. It is used for all operations with content controls.\n     */",
     "meta": {
       "lineno": 37,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "kind": "typedef",
     "name": "ContentControl",
@@ -681,7 +701,8 @@
     "comment": "/**\n     * @typedef {(0 | 1 | 2 | 3)} ContentControlLock\n     * A value that defines if it is possible to delete and/or edit the content control or not:\n\t * * **0** - only deleting\n\t * * **1** - disable deleting or editing\n\t * * **2** - only editing\n\t * * **3** - full access\n     */",
     "meta": {
       "lineno": 46,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "kind": "typedef",
     "name": "ContentControlLock",
@@ -705,7 +726,8 @@
         3400
       ],
       "lineno": 64,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Returns information about all the forms that have been added to the document.",
     "memberof": "Api",
@@ -743,7 +765,8 @@
         4293
       ],
       "lineno": 88,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Returns information about all the forms that have been added to the document with specified tag.",
     "memberof": "Api",
@@ -792,7 +815,8 @@
         4796
       ],
       "lineno": 115,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Sets a value to the specified form.",
     "memberof": "Api",
@@ -841,7 +865,8 @@
         6132
       ],
       "lineno": 130,
-      "columnno": 1
+      "columnno": 1,
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
     },
     "description": "Returns a value of the specified form.",
     "memberof": "Api",
