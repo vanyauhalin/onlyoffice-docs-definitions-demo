@@ -130,7 +130,7 @@ make
             // https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json
             const file = `https://api.github.com/repos/onlyoffice/${repo}/contents/${f}?ref=${commit}`
 
-            if (path !== "" && filename !== "") {
+            if (value.meta !== undefined) {
               // why file? because kind=package has the files property.
               value.meta.file = file
             }
