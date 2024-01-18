@@ -38,8 +38,6 @@ const repos = {
 make
   .command("build")
   .action(async () => {
-    // todo: add validation and making a report to the issues (in CI only).
-
     // todo: rewrite it.
     const rawMeta = await fetch("https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json")
     const meta = await rawMeta.json()
@@ -103,17 +101,43 @@ make
           parser(),
           new StreamArray(),
           (data) => {
+            // todo: describe a new schema.
+            // https://github.com/jsdoc/jsdoc/blob/main/packages/jsdoc-doclet/lib/schema.js#L87
+
             const { value } = data
+
             if (Object.hasOwn(value, "memberof") && value.memberof.startsWith("<anonymous>")) {
               return undefined
             }
             if (Object.hasOwn(value, "undocumented") && value.undocumented) {
               return undefined
             }
+
+            let path = ""
+            let filename = ""
             if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "path")) {
-              // todo: replace master with the commit hash.
-              value.meta.path = value.meta.path.replace(inputDir, `https://github.com/onlyoffice/${repo}/blob/${commit}`)
+              path = value.meta.path.replace(inputDir, "")
+              delete value.meta.path
             }
+            if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "filename")) {
+              filename = value.meta.filename
+              delete value.meta.filename
+            }
+
+            let f = join(path, filename)
+            if (f.startsWith("/")) {
+              f = f.slice(1)
+            }
+
+            // see github schema, don't generate manually, fetch from the github api (sure?)
+            // https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json
+            const file = `https://api.github.com/repos/onlyoffice/${repo}/contents/${f}?ref=${commit}`
+
+            if (path !== "" && filename !== "") {
+              // why file? because kind=package has the files property.
+              value.meta.file = file
+            }
+
             if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "code")) {
               delete value.meta.code
             }
@@ -121,10 +145,15 @@ make
               delete value.meta.vars
             }
             if (Object.hasOwn(value, "files")) {
-              value.files = value.files.map((file) => (
-                file.replace(inputDir, `https://github.com/onlyoffice/${repo}/blob/${commit}`)
-              ))
+              value.files = value.files.map((file) => {
+                let f = file.replace(inputDir, "")
+                if (f.startsWith("/")) {
+                  f = f.slice(1)
+                }
+                return `https://api.github.com/repos/onlyoffice/${repo}/contents/${f}?ref=${commit}`
+              })
             }
+
             return value
           },
           new Disassembler(),
