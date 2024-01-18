@@ -106,9 +106,6 @@ make
 
             const { value } = data
 
-            if (Object.hasOwn(value, "memberof") && value.memberof.startsWith("<anonymous>")) {
-              return undefined
-            }
             if (Object.hasOwn(value, "undocumented") && value.undocumented) {
               return undefined
             }
@@ -152,6 +149,13 @@ make
                 }
                 return `https://api.github.com/repos/onlyoffice/${repo}/contents/${f}?ref=${commit}`
               })
+            }
+
+            if (Object.hasOwn(value, "properties") && value.properties.length === 0) {
+              delete value.properties
+            }
+            if (Object.hasOwn(value, "params") && value.params.length === 0) {
+              delete value.params
             }
 
             return value
