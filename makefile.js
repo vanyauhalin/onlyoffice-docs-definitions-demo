@@ -79,9 +79,18 @@ make
       const o0 = join(temp, `${repo}0.json`)
       const w = createWriteStream(o0)
       await new Promise((resolve, reject) => {
-        const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--explain", "--recurse"])
-        e.stdout.on("data", (chunk) => {
-          w.write(chunk)
+        const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
+        e.stdout.on("data", (ch) => {
+          // todo: should be a better way.
+          const l = ch.toString()
+          if (
+            l.startsWith("DEBUG:") ||
+            l.startsWith(`Parsing ${inputDir}`) ||
+            l.startsWith("Finished running")
+          ) {
+            return
+          }
+          w.write(ch)
         })
         e.stdout.on("close", () => {
           w.close()
