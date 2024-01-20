@@ -103,6 +103,9 @@ make
         })
       })
 
+      // todo: check https://jsdoc.app/about-plugins
+      // maybe we can rewrite it with plugins.
+
       const o1 = join(temp, `${repo}1.json`)
       await new Promise((res, rej) => {
         const l = new Chain([
