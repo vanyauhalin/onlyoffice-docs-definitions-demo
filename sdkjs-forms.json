@@ -25,14 +25,22 @@
     "type": {
       "names": [
         "Object"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "Object"
+      }
     },
     "properties": [
       {
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "Form key.",
         "name": "key"
@@ -41,7 +49,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "Form tip text.",
         "name": "tip"
@@ -50,7 +62,11 @@
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the form is required or not.",
         "name": "required"
@@ -59,7 +75,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "Form placeholder text.",
         "name": "placeholder"
@@ -81,14 +101,22 @@
     "type": {
       "names": [
         "Object"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "Object"
+      }
     },
     "properties": [
       {
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the text field should be a comb of characters with the same cell width. The maximum number of characters must be set to a positive value.",
         "name": "comb"
@@ -97,7 +125,11 @@
         "type": {
           "names": [
             "number"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "number"
+          }
         },
         "description": "The maximum number of characters in the text field.",
         "name": "maxCharacters"
@@ -106,7 +138,11 @@
         "type": {
           "names": [
             "number"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "number"
+          }
         },
         "description": "The cell width for each character measured in millimeters. If this parameter is not specified or equal to 0 or less, then the width will be set automatically.",
         "name": "cellWidth"
@@ -115,7 +151,11 @@
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the current fixed size text field is multiline or not.",
         "name": "multiLine"
@@ -124,7 +164,11 @@
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the text field content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.",
         "name": "autoFit"
@@ -147,7 +191,20 @@
       "names": [
         "FormPrBase",
         "TextFormPrBase"
-      ]
+      ],
+      "parsedType": {
+        "type": "TypeUnion",
+        "elements": [
+          {
+            "type": "NameExpression",
+            "name": "FormPrBase"
+          },
+          {
+            "type": "NameExpression",
+            "name": "TextFormPrBase"
+          }
+        ]
+      }
     },
     "longname": "TextFormPr",
     "scope": "global"
@@ -165,14 +222,22 @@
     "type": {
       "names": [
         "Object"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "Object"
+      }
     },
     "properties": [
       {
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "optional": true,
         "defaultvalue": false,
@@ -183,7 +248,11 @@
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "optional": true,
         "defaultvalue": true,
@@ -209,7 +278,24 @@
         "FormPrBase",
         "TextFormPrBase",
         "FormInsertPr"
-      ]
+      ],
+      "parsedType": {
+        "type": "TypeUnion",
+        "elements": [
+          {
+            "type": "NameExpression",
+            "name": "FormPrBase"
+          },
+          {
+            "type": "NameExpression",
+            "name": "TextFormPrBase"
+          },
+          {
+            "type": "NameExpression",
+            "name": "FormInsertPr"
+          }
+        ]
+      }
     },
     "longname": "TextFormInsertPr",
     "scope": "global"
@@ -227,14 +313,22 @@
     "type": {
       "names": [
         "Object"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "Object"
+      }
     },
     "properties": [
       {
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the current checkbox is a radio button. In this case, the key parameter is considered as an identifier for the group of radio buttons.",
         "name": "radio"
@@ -257,7 +351,20 @@
       "names": [
         "FormPrBase",
         "CheckBoxFormPrBase"
-      ]
+      ],
+      "parsedType": {
+        "type": "TypeUnion",
+        "elements": [
+          {
+            "type": "NameExpression",
+            "name": "FormPrBase"
+          },
+          {
+            "type": "NameExpression",
+            "name": "CheckBoxFormPrBase"
+          }
+        ]
+      }
     },
     "longname": "CheckBoxFormPr",
     "scope": "global"
@@ -275,14 +382,22 @@
     "type": {
       "names": [
         "Object"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "Object"
+      }
     },
     "properties": [
       {
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the combo box text can be edited.",
         "name": "editable"
@@ -291,7 +406,11 @@
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the combo box form content should be autofit, i.e. whether the font size adjusts to the size of the fixed size form.",
         "name": "autoFit"
@@ -300,7 +419,38 @@
         "type": {
           "names": [
             "Array.<(string|Array.<string>)>"
-          ]
+          ],
+          "parsedType": {
+            "type": "TypeApplication",
+            "expression": {
+              "type": "NameExpression",
+              "name": "Array"
+            },
+            "applications": [
+              {
+                "type": "TypeUnion",
+                "elements": [
+                  {
+                    "type": "NameExpression",
+                    "name": "string"
+                  },
+                  {
+                    "type": "TypeApplication",
+                    "expression": {
+                      "type": "NameExpression",
+                      "name": "Array"
+                    },
+                    "applications": [
+                      {
+                        "type": "NameExpression",
+                        "name": "string"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
         },
         "description": "The combo box items.\nThis array consists of strings or arrays of two strings where the first string is the displayed value and the second one is its meaning.\nIf the array consists of single strings, then the displayed value and its meaning are the same.\nExample: [\"First\", [\"Second\", \"2\"], [\"Third\", \"3\"], \"Fourth\"].",
         "name": "items"
@@ -323,7 +473,20 @@
       "names": [
         "FormPrBase",
         "ComboBoxFormPrBase"
-      ]
+      ],
+      "parsedType": {
+        "type": "TypeUnion",
+        "elements": [
+          {
+            "type": "NameExpression",
+            "name": "FormPrBase"
+          },
+          {
+            "type": "NameExpression",
+            "name": "ComboBoxFormPrBase"
+          }
+        ]
+      }
     },
     "longname": "ComboBoxFormPr",
     "scope": "global"
@@ -344,7 +507,28 @@
         "\"never\"",
         "\"tooBig\"",
         "\"tooSmall\""
-      ]
+      ],
+      "parsedType": {
+        "type": "TypeUnion",
+        "elements": [
+          {
+            "type": "NameExpression",
+            "name": "\"always\""
+          },
+          {
+            "type": "NameExpression",
+            "name": "\"never\""
+          },
+          {
+            "type": "NameExpression",
+            "name": "\"tooBig\""
+          },
+          {
+            "type": "NameExpression",
+            "name": "\"tooSmall\""
+          }
+        ]
+      }
     },
     "longname": "ScaleFlag",
     "scope": "global"
@@ -362,7 +546,11 @@
     "type": {
       "names": [
         "number"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "number"
+      }
     },
     "longname": "percentage",
     "scope": "global"
@@ -380,14 +568,22 @@
     "type": {
       "names": [
         "Object"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "Object"
+      }
     },
     "properties": [
       {
         "type": {
           "names": [
             "ScaleFlag"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ScaleFlag"
+          }
         },
         "description": "The condition to scale an image in the picture form: \"always\", \"never\", \"tooBig\" or \"tooSmall\".",
         "name": "scaleFlag"
@@ -396,7 +592,11 @@
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the aspect ratio of the picture form is locked or not.",
         "name": "lockAspectRatio"
@@ -405,7 +605,11 @@
         "type": {
           "names": [
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "boolean"
+          }
         },
         "description": "Specifies if the form border width is respected or not when scaling the image.",
         "name": "respectBorders"
@@ -414,7 +618,11 @@
         "type": {
           "names": [
             "percentage"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "percentage"
+          }
         },
         "description": "Horizontal picture position inside the picture form measured in percent:\n* <b>0</b> - the picture is placed on the left;\n* <b>50</b> - the picture is placed in the center;\n* <b>100</b> - the picture is placed on the right.",
         "name": "shiftX"
@@ -423,7 +631,11 @@
         "type": {
           "names": [
             "percentage"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "percentage"
+          }
         },
         "description": "Vertical picture position inside the picture form measured in percent:\n* <b>0</b> - the picture is placed on top;\n* <b>50</b> - the picture is placed in the center;\n* <b>100</b> - the picture is placed on the bottom.",
         "name": "shiftY"
@@ -446,7 +658,20 @@
       "names": [
         "FormPrBase",
         "PictureFormPrBase"
-      ]
+      ],
+      "parsedType": {
+        "type": "TypeUnion",
+        "elements": [
+          {
+            "type": "NameExpression",
+            "name": "FormPrBase"
+          },
+          {
+            "type": "NameExpression",
+            "name": "PictureFormPrBase"
+          }
+        ]
+      }
     },
     "longname": "PictureFormPr",
     "scope": "global"
@@ -469,7 +694,11 @@
         "type": {
           "names": [
             "TextFormPr"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "TextFormPr"
+          }
         },
         "description": "Text field properties.",
         "name": "oFormPr"
@@ -480,7 +709,11 @@
         "type": {
           "names": [
             "ApiTextForm"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ApiTextForm"
+          }
         }
       }
     ],
@@ -507,7 +740,11 @@
         "type": {
           "names": [
             "CheckBoxFormPr"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "CheckBoxFormPr"
+          }
         },
         "description": "Checkbox / radio button properties.",
         "name": "oFormPr"
@@ -518,7 +755,11 @@
         "type": {
           "names": [
             "ApiCheckBoxForm"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ApiCheckBoxForm"
+          }
         }
       }
     ],
@@ -545,7 +786,11 @@
         "type": {
           "names": [
             "ComboBoxFormPr"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ComboBoxFormPr"
+          }
         },
         "description": "Combo box / dropdown list properties.",
         "name": "oFormPr"
@@ -556,7 +801,11 @@
         "type": {
           "names": [
             "ApiComboBoxForm"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ApiComboBoxForm"
+          }
         }
       }
     ],
@@ -583,7 +832,11 @@
         "type": {
           "names": [
             "PictureFormPr"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "PictureFormPr"
+          }
         },
         "description": "Picture form properties.",
         "name": "oFormPr"
@@ -594,7 +847,11 @@
         "type": {
           "names": [
             "ApiPictureForm"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ApiPictureForm"
+          }
         }
       }
     ],
@@ -621,7 +878,11 @@
         "type": {
           "names": [
             "TextFormInsertPr"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "TextFormInsertPr"
+          }
         },
         "description": "Properties for inserting a text field.",
         "name": "oFormPr"
@@ -632,7 +893,11 @@
         "type": {
           "names": [
             "ApiTextForm"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ApiTextForm"
+          }
         }
       }
     ],
@@ -653,7 +918,11 @@
     "type": {
       "names": [
         "Object"
-      ]
+      ],
+      "parsedType": {
+        "type": "NameExpression",
+        "name": "Object"
+      }
     },
     "description": "Content control object.",
     "properties": [
@@ -661,7 +930,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "A tag assigned to the content control. The same tag can be assigned to several content controls so that it is possible to make reference to them in your code.",
         "name": "Tag"
@@ -670,7 +943,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "A unique identifier of the content control. It can be used to search for a certain content control and make reference to it in the code.",
         "name": "Id"
@@ -679,7 +956,11 @@
         "type": {
           "names": [
             "ContentControlLock"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "ContentControlLock"
+          }
         },
         "description": "A value that defines if it is possible to delete and/or edit the content control or not: 0 - only deleting, 1 - no deleting or editing, 2 - only editing, 3 - full access.",
         "name": "Lock"
@@ -688,7 +969,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "A unique internal identifier of the content control. It is used for all operations with content controls.",
         "name": "InternalId"
@@ -712,7 +997,28 @@
         "1",
         "2",
         "3"
-      ]
+      ],
+      "parsedType": {
+        "type": "TypeUnion",
+        "elements": [
+          {
+            "type": "NameExpression",
+            "name": "0"
+          },
+          {
+            "type": "NameExpression",
+            "name": "1"
+          },
+          {
+            "type": "NameExpression",
+            "name": "2"
+          },
+          {
+            "type": "NameExpression",
+            "name": "3"
+          }
+        ]
+      }
     },
     "description": "A value that defines if it is possible to delete and/or edit the content control or not:\n* **0** - only deleting\n* **1** - disable deleting or editing\n* **2** - only editing\n* **3** - full access",
     "longname": "ContentControlLock",
@@ -745,7 +1051,20 @@
         "type": {
           "names": [
             "Array.<ContentControl>"
-          ]
+          ],
+          "parsedType": {
+            "type": "TypeApplication",
+            "expression": {
+              "type": "NameExpression",
+              "name": "Array"
+            },
+            "applications": [
+              {
+                "name": "ContentControl",
+                "type": "NameExpression"
+              }
+            ]
+          }
         },
         "description": "- An array with all the forms from the document."
       }
@@ -784,7 +1103,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "The form tag.",
         "name": "tag"
@@ -795,7 +1118,20 @@
         "type": {
           "names": [
             "Array.<ContentControl>"
-          ]
+          ],
+          "parsedType": {
+            "type": "TypeApplication",
+            "expression": {
+              "type": "NameExpression",
+              "name": "Array"
+            },
+            "applications": [
+              {
+                "name": "ContentControl",
+                "type": "NameExpression"
+              }
+            ]
+          }
         },
         "description": "- An array with all the forms from the document with the specified tag."
       }
@@ -834,7 +1170,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "A unique internal identifier of the form.",
         "name": "internalId"
@@ -844,7 +1184,20 @@
           "names": [
             "string",
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "TypeUnion",
+            "elements": [
+              {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              {
+                "type": "NameExpression",
+                "name": "boolean"
+              }
+            ]
+          }
         },
         "description": "Form value to be set. Its type depends on the form type.",
         "name": "value"
@@ -884,7 +1237,11 @@
         "type": {
           "names": [
             "string"
-          ]
+          ],
+          "parsedType": {
+            "type": "NameExpression",
+            "name": "string"
+          }
         },
         "description": "A unique internal identifier of the form.",
         "name": "internalId"
@@ -897,7 +1254,23 @@
             "null",
             "string",
             "boolean"
-          ]
+          ],
+          "parsedType": {
+            "type": "TypeUnion",
+            "elements": [
+              {
+                "type": "NullLiteral"
+              },
+              {
+                "type": "NameExpression",
+                "name": "string"
+              },
+              {
+                "type": "NameExpression",
+                "name": "boolean"
+              }
+            ]
+          }
         },
         "description": "The form value in the string or boolean format depending on the form type. The null value means that the form is filled with a placeholder."
       }
