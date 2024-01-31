@@ -4,7 +4,7 @@
     "meta": {
       "lineno": 48,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Base class",
     "scope": "global",
@@ -17,7 +17,7 @@
     "meta": {
       "lineno": 56,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Common form properties.",
     "kind": "typedef",
@@ -93,7 +93,7 @@
     "meta": {
       "lineno": 65,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Specific text field properties.",
     "kind": "typedef",
@@ -182,7 +182,7 @@
     "meta": {
       "lineno": 75,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Text field properties.",
     "kind": "typedef",
@@ -214,7 +214,7 @@
     "meta": {
       "lineno": 80,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Form insertion specific properties.",
     "kind": "typedef",
@@ -268,7 +268,7 @@
     "meta": {
       "lineno": 87,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Properties for inserting a text field.",
     "kind": "typedef",
@@ -305,7 +305,7 @@
     "meta": {
       "lineno": 93,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Specific checkbox / radio button properties.",
     "kind": "typedef",
@@ -342,7 +342,7 @@
     "meta": {
       "lineno": 99,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Checkbox / radio button properties.",
     "kind": "typedef",
@@ -374,7 +374,7 @@
     "meta": {
       "lineno": 104,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Specific combo box / dropdown list properties.",
     "kind": "typedef",
@@ -464,7 +464,7 @@
     "meta": {
       "lineno": 116,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Combo box / dropdown list properties.",
     "kind": "typedef",
@@ -496,7 +496,7 @@
     "meta": {
       "lineno": 121,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "The condition to scale an image in the picture form.",
     "kind": "typedef",
@@ -538,7 +538,7 @@
     "meta": {
       "lineno": 126,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Value from 0 to 100.",
     "kind": "typedef",
@@ -560,7 +560,7 @@
     "meta": {
       "lineno": 131,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Specific picture form properties.",
     "kind": "typedef",
@@ -649,7 +649,7 @@
     "meta": {
       "lineno": 147,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Picture form properties.",
     "kind": "typedef",
@@ -685,7 +685,7 @@
       ],
       "lineno": 158,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Creates a text field with the specified text field properties.",
     "memberof": "Api",
@@ -731,7 +731,7 @@
       ],
       "lineno": 174,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Creates a checkbox / radio button with the specified checkbox / radio button properties.",
     "memberof": "Api",
@@ -777,7 +777,7 @@
       ],
       "lineno": 244,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Creates a combo box / dropdown list with the specified combo box / dropdown list properties.",
     "memberof": "Api",
@@ -823,7 +823,7 @@
       ],
       "lineno": 309,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Creates a picture form with the specified picture form properties.",
     "memberof": "Api",
@@ -869,7 +869,7 @@
       ],
       "lineno": 348,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Inserts a text box with the specified text box properties over the selected text.",
     "memberof": "ApiDocument",
@@ -911,7 +911,7 @@
     "meta": {
       "lineno": 37,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "kind": "typedef",
     "name": "ContentControl",
@@ -987,7 +987,7 @@
     "meta": {
       "lineno": 46,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "kind": "typedef",
     "name": "ContentControlLock",
@@ -1033,7 +1033,7 @@
       ],
       "lineno": 64,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Returns information about all the forms that have been added to the document.",
     "memberof": "Api",
@@ -1085,7 +1085,7 @@
       ],
       "lineno": 88,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Returns information about all the forms that have been added to the document with specified tag.",
     "memberof": "Api",
@@ -1152,7 +1152,7 @@
       ],
       "lineno": 115,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Sets a value to the specified form.",
     "memberof": "Api",
@@ -1219,7 +1219,7 @@
       ],
       "lineno": 130,
       "columnno": 1,
-      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "file": "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     },
     "description": "Returns a value of the specified form.",
     "memberof": "Api",
@@ -1286,8 +1286,8 @@
     "kind": "package",
     "longname": "package:undefined",
     "files": [
-      "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d",
-      "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=d16707c294a3b88a6cdbe5fb7c6e772a73631b6d"
+      "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiBuilder.js?ref=aead3839376687931089099c835be561ad0bb3ac",
+      "https://api.github.com/repos/onlyoffice/sdkjs-forms/contents/apiPlugins.js?ref=aead3839376687931089099c835be561ad0bb3ac"
     ]
   }
 ]
