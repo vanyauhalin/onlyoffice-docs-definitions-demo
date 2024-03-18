@@ -61,6 +61,15 @@ make
     const dist = join(root, "dist")
     await mkdir(dist, { recursive: true })
 
+    // function module(repo, file) {
+    //   switch (repo) {
+    //   case "sdkjs":
+    //     return "skdjs"
+    //   case "sdkjs-forms":
+    //     return "sdkjs-forms"
+    //   }
+    // }
+
     await Promise.all(Object.entries(repos).map(async ([repo, files]) => {
       // todo: common...
       const commit = repo === "sdkjs" ? sdkjsSHA : sdkjsFormsSHA
@@ -74,6 +83,7 @@ make
         const u = `https://raw.githubusercontent.com/ONLYOFFICE/${repo}/${commit}/${file}`
         const i = join(inputDir, file)
         await downloadFile(u, i)
+        // await appendFile(i, `/** @module ${module(repo)} */`)
       }))
 
       const o0 = join(temp, `${repo}0.json`)
