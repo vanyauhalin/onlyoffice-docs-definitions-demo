@@ -35,32 +35,37 @@ const repos = {
   ]
 }
 
+async function rawToJson (url) {
+  const raw = await fetch(url)
+  const json = await raw.json()
+  return json
+}
+
+function checkUpdate(meta, sdkjs, sdkjsForms) {
+  const hasUpdate = !(meta["sdkjs"] === sdkjs[0].sha && meta["sdkjs-forms"] === sdkjsForms[0].sha)
+  if (!hasUpdate) {
+    console.log("No update")
+    return true
+  }
+}
 make
   .command("build")
   .action(async () => {
-    // todo: rewrite it.
-    const rawMeta = await fetch("https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json")
-    const meta = await rawMeta.json()
-
-    const rawSDKJS = await fetch("https://api.github.com/repos/ONLYOFFICE/sdkjs/commits")
-    const sdkjs = await rawSDKJS.json()
-    const sdkjsSHA = sdkjs[0].sha
-
-    const rawSDKJSForms = await fetch("https://api.github.com/repos/ONLYOFFICE/sdkjs-forms/commits")
-    const sdkjsForms = await rawSDKJSForms.json()
-    const sdkjsFormsSHA = sdkjsForms[0].sha
-
-    const hasUpdate = !(meta["sdkjs"] === sdkjsSHA && meta["sdkjs-forms"] === sdkjsFormsSHA)
-    if (!hasUpdate) {
-      console.log("No update")
+    const meta = await rawToJson("https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json")
+    const sdkjs = await rawToJson("https://api.github.com/repos/ONLYOFFICE/sdkjs/commits")
+    const sdkjsForms = await rawToJson("https://api.github.com/repos/ONLYOFFICE/sdkjs-forms/commits")
+    if (checkUpdate(meta, sdkjs, sdkjsForms)) {
       return
     }
+    
+    const sdkjsSHA = sdkjs[0].sha
+    const sdkjsFormsSHA = sdkjsForms[0].sha
 
     const tmp = join(tmpdir(), "onlyoffice-docs-definitions-demo")
     const temp = await mkdtemp(tmp)
     const dist = join(root, "dist")
     await mkdir(dist, { recursive: true })
-
+    
     // function module(repo, file) {
     //   switch (repo) {
     //   case "sdkjs":
@@ -92,10 +97,10 @@ make
         const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
         e.stdout.on("data", (ch) => {
           // todo: should be a better way.
-          const l = ch.toString()
+          const l = ch.slice(0,16).toString()
           if (
             l.startsWith("DEBUG:") ||
-            l.startsWith(`Parsing ${inputDir}`) ||
+            l.startsWith("Parsing") ||
             l.startsWith("Finished running")
           ) {
             return
@@ -115,6 +120,20 @@ make
 
       // todo: check https://jsdoc.app/about-plugins
       // maybe we can rewrite it with plugins.
+      function removeMetaProperty(value, propertyName) {
+        let property = ""
+        if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, propertyName)) {
+          property = value.meta[propertyName]
+          delete value.meta[propertyName]
+        }
+        return property
+      }
+
+      function removePropertyByLen(value, propertyName) {
+        if (Object.hasOwn(value, propertyName) && value[propertyName].length === 0) {
+          delete value[propertyName]
+        }
+      }
 
       const o1 = join(temp, `${repo}1.json`)
       await new Promise((res, rej) => {
@@ -125,23 +144,18 @@ make
           (data) => {
             // todo: describe a new schema.
             // https://github.com/jsdoc/jsdoc/blob/main/packages/jsdoc-doclet/lib/schema.js#L87
-
             const { value } = data
 
             if (Object.hasOwn(value, "undocumented") && value.undocumented) {
               return undefined
             }
-
-            let path = ""
-            let filename = ""
-            if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "path")) {
-              path = value.meta.path.replace(inputDir, "")
-              delete value.meta.path
-            }
-            if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "filename")) {
-              filename = value.meta.filename
-              delete value.meta.filename
-            }
+            
+            let path = removeMetaProperty(value, "path").replace(inputDir, "")
+            let filename = removeMetaProperty(value, "filename")
+            removeMetaProperty(value, "code")
+            removeMetaProperty(value, "vars")
+            removePropertyByLen(value, "properties")
+            removePropertyByLen(value, "params")
 
             let f = join(path, filename)
             if (f.startsWith("/")) {
@@ -156,13 +170,7 @@ make
               // why file? because kind=package has the files property.
               value.meta.file = file
             }
-
-            if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "code")) {
-              delete value.meta.code
-            }
-            if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "vars")) {
-              delete value.meta.vars
-            }
+            
             if (Object.hasOwn(value, "files")) {
               value.files = value.files.map((file) => {
                 let f = file.replace(inputDir, "")
@@ -171,13 +179,6 @@ make
                 }
                 return `https://api.github.com/repos/onlyoffice/${repo}/contents/${f}?ref=${commit}`
               })
-            }
-
-            if (Object.hasOwn(value, "properties") && value.properties.length === 0) {
-              delete value.properties
-            }
-            if (Object.hasOwn(value, "params") && value.params.length === 0) {
-              delete value.params
             }
 
             return value
