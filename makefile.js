@@ -1,9 +1,13 @@
 // @ts-check
 
+/**
+* @typedef {import("node:stream").TransformCallback} TransformCallback
+*/
+
 import { spawn } from "node:child_process"
 import { Console as NodeConsole } from "node:console"
 import { createReadStream, createWriteStream } from "node:fs"
-import { mkdir, mkdtemp, open, writeFile, rmdir, rm } from "node:fs/promises"
+import { mkdir, mkdtemp, open, writeFile, rm } from "node:fs/promises"
 import http from "node:https"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
@@ -15,6 +19,7 @@ import StreamArray from "stream-json/streamers/StreamArray.js"
 import Disassembler from "stream-json/Disassembler.js"
 import Stringer from "stream-json/Stringer.js"
 import Parser from "stream-json/Parser.js"
+import { Transform } from "node:stream"
 
 
 class Console extends NodeConsole {
@@ -210,60 +215,7 @@ async function processFiles(temp) {
         new Parser(),
         new StreamArray(),
         // to _transform
-        (data) => {
-          // todo: describe a new schema.
-          // https://github.com/jsdoc/jsdoc/blob/main/packages/jsdoc-doclet/lib/schema.js#L87
-          const { value } = data
-          if (Object.hasOwn(value, "undocumented") && value.undocumented) {
-            return undefined
-          }
-          let path = ""
-          let filename = ""
-          if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "path")) {
-            path = value.meta.path.replace(inputDir, "")
-            delete value.meta.path
-          }
-          if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "filename")) {
-            filename = value.meta.filename
-            delete value.meta.filename
-          }
-          let f = join(path, filename)
-          if (f.startsWith("/")) {
-            f = f.slice(1)
-          }
-          // see github schema, don't generate manually, fetch from the github api (sure?)
-          // https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json
-          const file = `https://api.github.com/repos/onlyoffice/${commit.repoName}/contents/${f}?ref=${commit.sha}`
-          if (value.meta !== undefined) {
-            // why file? because kind=package has the files property.
-            value.meta.file = file
-          }
-          
-          if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "code")) {
-            delete value.meta.code
-          }
-          if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "vars")) {
-            delete value.meta.vars
-          }
-          if (Object.hasOwn(value, "files")) {
-            value.files = value.files.map((file) => {
-              let f = file.replace(inputDir, "")
-              if (f.startsWith("/")) {
-                f = f.slice(1)
-              }
-              return `https://api.github.com/repos/onlyoffice/${commit.repoName}/contents/${f}?ref=${commit.sha}`
-            })
-          }
-          
-          if (Object.hasOwn(value, "properties") && value.properties.length === 0) {
-            delete value.properties
-          }
-          if (Object.hasOwn(value, "params") && value.params.length === 0) {
-            delete value.params
-          }
-          
-          return value
-        },
+        new ProcessJson(commit, inputDir),
         new Disassembler(),
         new Stringer({ makeArray: true }),
         createWriteStream(o1)
@@ -311,6 +263,78 @@ function downloadFile(url, path) {
     })
   })
 }
+
+class ProcessJson extends Transform {
+   /**
+   * @param {object} commit
+   * @param {string} inputDir
+   */
+  constructor(commit, inputDir) {
+    super({ objectMode: true })
+    this.commit = commit
+    this.inputDir = inputDir
+  }
+    /**
+   * @param {Object} ch
+   * @param {TransformCallback} cb
+   * @returns {void}
+   */
+  _transform(ch, _, cb) {
+    const { value } = ch
+    if (Object.hasOwn(value, "undocumented") && value.undocumented) {
+      cb(null)
+      return 
+    }
+    let path = ""
+    let filename = ""
+    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "path")) {
+      path = value.meta.path.replace(this.inputDir, "")
+      delete value.meta.path
+    }
+    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "filename")) {
+      filename = value.meta.filename
+      delete value.meta.filename
+    }
+    let f = join(path, filename)
+    if (f.startsWith("/")) {
+      f = f.slice(1)
+    }
+    // see github schema, don't generate manually, fetch from the github api (sure?)
+    // https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json
+    const file = `https://api.github.com/repos/onlyoffice/${this.commit.repoName}/contents/${f}?ref=${this.commit.sha}`
+    if (value.meta !== undefined) {
+      // why file? because kind=package has the files property.
+      value.meta.file = file
+    }
+    
+    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "code")) {
+      delete value.meta.code
+    }
+    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "vars")) {
+      delete value.meta.vars
+    }
+    if (Object.hasOwn(value, "files")) {
+      value.files = value.files.map((file) => {
+        let f = file.replace(this.inputDir, "")
+        if (f.startsWith("/")) {
+          f = f.slice(1)
+        }
+        return `https://api.github.com/repos/onlyoffice/${this.commit.repoName}/contents/${f}?ref=${this.commit.sha}`
+      })
+    }
+    
+    if (Object.hasOwn(value, "properties") && value.properties.length === 0) {
+      delete value.properties
+    }
+    if (Object.hasOwn(value, "params") && value.params.length === 0) {
+      delete value.params
+    }
+    
+    this.push(value)
+    cb(null)
+  }
+}
+
 
 /**
  * @param {string} temp Temp dir path.
