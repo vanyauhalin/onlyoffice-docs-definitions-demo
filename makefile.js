@@ -91,17 +91,24 @@ async function build() {
     return
   }
 
-  const context = {
-    dist: join(root, "dist"),
-    temp: ""
-  }
-  await mkdir(context.dist)
+  const context = {}
+  context.dist = join(root, "dist")
+  await mkdir(context.dist, { recursive: true }) // recursive is necessary, otherwise err File already exists
   const tmp = join(tmpdir(), repoName)
   const temp = await mkdtemp(tmp)
   context.temp = temp
   
+  await Promise.all(Object.entries(repos).map(async ([, commit]) => {
+    const inputDir = join(context.temp, commit.sha)
+    await mkdir(inputDir)
+    await downloadFiles(inputDir, commit)
 
-  await processFiles(context)
+    context.o0 = join(context.temp, `${commit.repoName}0.json`)
+    await writeToRawJson(context, inputDir)
+    context.o1 = join(context.temp, `${commit.repoName}1.json`)
+    await processRawJson(context, inputDir, commit)
+  }))
+
   await removeTempDir(context.temp)
   await createMetaJson(context.dist)
 }
@@ -130,73 +137,75 @@ async function checkUpdates() {
 }
 
 /**
- * @param {object} context Temp dir path.
+ * Reads raw Json and creates processed Json in dist.
+ * @param {object} context
+ * @param {string} inputDir
  * @returns {Promise<void>}
  */
-async function processFiles(context) {
-  await Promise.all(Object.entries(repos).map(async ([, commit]) => {
-    const inputDir = join(context.temp, commit.sha)
-    await mkdir(inputDir)
+async function writeToRawJson(context, inputDir) {
+  const w = createWriteStream(context.o0)
+  await new Promise((resolve, reject) => {
+    const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
+    e.stdout.on("data", (ch) => {
+      // todo: should be a better way.
+      const l = ch.toString()
+      if (
+        l.startsWith("DEBUG:") ||
+        l.startsWith(`Parsing ${inputDir}`) ||
+        l.startsWith("Finished running")
+      ) {
+        return
+      }
+      w.write(ch)
+    })
+    e.stdout.on("close", () => {
+      w.close()
+      resolve(undefined)
+    })
+    e.stdout.on("error", (error) => {
+      console.error(error)
+      w.close()
+      reject(error)
+    })
+  })
+}
 
-    await downloadFiles(inputDir, commit)
-
-    const o0 = join(context.temp, `${commit.repoName}0.json`)
-    const w = createWriteStream(o0)
-    await new Promise((resolve, reject) => {
-      const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
-      e.stdout.on("data", (ch) => {
-        // todo: should be a better way.
-        const l = ch.toString()
-        if (
-          l.startsWith("DEBUG:") ||
-          l.startsWith(`Parsing ${inputDir}`) ||
-          l.startsWith("Finished running")
-        ) {
-          return
-        }
-        w.write(ch)
+/**
+ * Reads raw Json and creates processed Json in dist.
+ * @param {object} context
+ * @param {string} inputDir
+ * @param {object} commit
+ * @returns {Promise<void>}
+ */
+async function processRawJson(context, inputDir, commit) {
+  await new Promise((res, rej) => {
+    const l = new Chain([
+      createReadStream(context.o0),
+      new Parser(),
+      new StreamArray(),
+      new ProcessJson(commit, inputDir),
+      new Disassembler(),
+      new Stringer({ makeArray: true }),
+      createWriteStream(context.o1)
+    ])
+    l.on("finish", () => {
+      const o2 = join(context.dist, `${commit.repoName}.json`)
+      const w = createWriteStream(o2)
+      const s = spawn("jq", [".", context.o1])
+      s.stdout.on("data", (chunk) => {
+        w.write(chunk)
       })
-      e.stdout.on("close", () => {
+      s.stdout.on("close", () => {
         w.close()
-        resolve(undefined)
+        res(undefined)
       })
-      e.stdout.on("error", (error) => {
+      s.stdout.on("error", (error) => {
         console.error(error)
         w.close()
-        reject(error)
+        rej(error)
       })
     })
-
-    const o1 = join(context.temp, `${commit.repoName}1.json`)
-    await new Promise((res, rej) => {
-      const l = new Chain([
-        createReadStream(o0),
-        new Parser(),
-        new StreamArray(),
-        new ProcessJson(commit, inputDir),
-        new Disassembler(),
-        new Stringer({ makeArray: true }),
-        createWriteStream(o1)
-      ])
-      l.on("finish", () => {
-        const o2 = join(context.dist, `${commit.repoName}.json`)
-        const w = createWriteStream(o2)
-        const s = spawn("jq", [".", o1])
-        s.stdout.on("data", (chunk) => {
-          w.write(chunk)
-        })
-        s.stdout.on("close", () => {
-          w.close()
-          res(undefined)
-        })
-        s.stdout.on("error", (error) => {
-          console.error(error)
-          w.close()
-          rej(error)
-        })
-      })
-    })
-  }))
+  })
 }
 
 /**
@@ -320,7 +329,6 @@ async function removeTempDir(temp) {
   await Promise.all(Object.entries(repos).map(async () => {
     await rm(temp, { recursive: true })
   }))
-  console.warn(`Temp dir at ${temp} removed`)
 }
 
 /**
@@ -330,11 +338,11 @@ async function removeTempDir(temp) {
  */
 async function createMetaJson(dist) {
   const mf = join(dist, "meta.json")
-    const mo = {
-      "sdkjs": repos.sdkjs.sha,
-      "sdkjs-forms": repos.sdkjsForms.sha,
-    }
-    await writeFile(mf, JSON.stringify(mo, undefined, 2))
+  const mo = {
+    "sdkjs": repos.sdkjs.sha,
+    "sdkjs-forms": repos.sdkjsForms.sha,
+  }
+  await writeFile(mf, JSON.stringify(mo, undefined, 2))
 }
 
 /**
