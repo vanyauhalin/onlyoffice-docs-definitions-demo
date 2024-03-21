@@ -6,12 +6,13 @@
 
 import { spawn } from "node:child_process"
 import { Console as NodeConsole } from "node:console"
-import { createReadStream, createWriteStream } from "node:fs"
-import { mkdir, mkdtemp, open, writeFile, rm } from "node:fs/promises"
-import http from "node:https"
+import { createReadStream, createWriteStream, existsSync } from "node:fs"
+import { mkdir, mkdtemp, writeFile, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { dirname, join } from "node:path"
 import { argv } from "node:process"
+import { finished } from "node:stream/promises"
+import { Readable, Transform } from "node:stream"
 import { fileURLToPath } from "node:url"
 import sade from "sade"
 import Chain from "stream-chain"
@@ -19,7 +20,6 @@ import StreamArray from "stream-json/streamers/StreamArray.js"
 import Disassembler from "stream-json/Disassembler.js"
 import Stringer from "stream-json/Stringer.js"
 import Parser from "stream-json/Parser.js"
-import { Transform } from "node:stream"
 
 class Console extends NodeConsole {
   /**
@@ -40,33 +40,35 @@ class Console extends NodeConsole {
 }
 
 const root = fileURLToPath(new URL(".", import.meta.url))
-const console = createConsole(root)
+const console = new Console(process.stdout, process.stderr)
 
 const repoName = "onlyoffice-docs-definitions-demo"
 const repoOwner = "vanyauhalin"
+
 const repos = {
-  sdkjs: {
-    repoName: "sdkjs",
-    sha: "",
-    files: [
-      "word/apiBuilder.js",
-      "cell/apiBuilder.js",
-      "slide/apiBuilder.js",
-      "word/api_plugins.js",
-      "cell/api_plugins.js",
-      "slide/api_plugins.js",
-      "common/apiBase_plugins.js",
-      "common/plugins/plugin_base_api.js"
-    ]
-  },
-  sdkjsForms: {
-    repoName: "sdkjs-forms",
-    sha: "",
-    files: [
-      "apiBuilder.js",
-      "apiPlugins.js"
-    ]
-  }
+  "sdkjs": [
+    "word/apiBuilder.js",
+    "cell/apiBuilder.js",
+    "slide/apiBuilder.js",
+    "word/api_plugins.js",
+    "cell/api_plugins.js",
+    "slide/api_plugins.js",
+    "common/apiBase_plugins.js",
+    "common/plugins/plugin_base_api.js"
+  ],
+  "sdkjs-forms": [
+    "apiBuilder.js",
+    "apiPlugins.js"
+  ]
+}
+
+/**
+ * @param {string} sdkjs
+ * @param {string} sdkjsForms
+ */
+const sha = {
+  sdkjs: "",
+  sdkjsForms: ""
 }
 
 /**
@@ -74,7 +76,7 @@ const repos = {
  */
 function main() {
   const make = sade("./makefile.js")
-  
+
   make
     .command("build")
     .action(build)
@@ -88,29 +90,94 @@ function main() {
 async function build() {
   const hasUpdate = await checkUpdates()
   if (!hasUpdate) {
+    console.info("No update")
     return
   }
 
-  const context = {}
-  context.dist = join(root, "dist")
-  await mkdir(context.dist, { recursive: true }) // recursive is necessary, otherwise err File already exists
+  const dist = join(root, "dist")
+  if (!existsSync(dist)) {
+    await(mkdir(dist))
+  }
   const tmp = join(tmpdir(), repoName)
-  const temp = await mkdtemp(tmp)
-  context.temp = temp
-  
-  await Promise.all(Object.entries(repos).map(async ([, commit]) => {
-    const inputDir = join(context.temp, commit.sha)
-    await mkdir(inputDir)
-    await downloadFiles(inputDir, commit)
+  const temp = await mkdtemp(`${tmp}-`)
 
-    context.o0 = join(context.temp, `${commit.repoName}0.json`)
-    await writeToRawJson(context, inputDir)
-    context.o1 = join(context.temp, `${commit.repoName}1.json`)
-    await processRawJson(context, inputDir, commit)
+  await Promise.all(Object.entries(repos).map(async ([repo, files]) => {
+    const commit = repo === "sdkjs" ? sha.sdkjs : sha.sdkjsForms
+    const inputDir = join(temp, repo)
+    await mkdir(inputDir)
+    await Promise.all(files.map(async (file) => {
+      const n = dirname(file)
+      const d = join(inputDir, n)
+      await mkdir(d, { recursive: true })
+      const u = `https://raw.githubusercontent.com/ONLYOFFICE/${repo}/${commit}/${file}`
+      const i = join(inputDir, file)
+      await downloadFile(u, i)
+      // await appendFile(i, `/** @module ${module(repo)} */`)
+    }))
+
+    const o0 = join(temp, `${commit}0.json`)
+    const w = createWriteStream(o0)
+    await new Promise((resolve, reject) => {
+      const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
+      e.stdout.on("data", (ch) => {
+        // todo: should be a better way.
+        const l = ch.toString()
+        if (
+          l.startsWith("DEBUG:") ||
+          l.startsWith(`Parsing ${inputDir}`) ||
+          l.startsWith("Finished running")
+        ) {
+          return
+        }
+        w.write(ch)
+      })
+      e.stdout.on("close", () => {
+        w.close()
+        resolve(undefined)
+      })
+      e.stdout.on("error", (error) => {
+        console.error(error)
+        w.close()
+        reject(error)
+      })
+    })
+
+    const o1 = join(temp, `${commit}1.json`)
+    await new Promise((res, rej) => {
+      const l = new Chain([
+        createReadStream(o0),
+        new Parser(),
+        new StreamArray(),
+        new ProcessJson(repo, commit, inputDir),
+        new Disassembler(),
+        new Stringer({ makeArray: true }),
+        createWriteStream(o1)
+      ])
+      l.on("finish", () => {
+        const o2 = join(dist, `${repo}.json`)
+        const w = createWriteStream(o2)
+        const s = spawn("jq", [".", o1])
+        s.stdout.on("data", (chunk) => {
+          w.write(chunk)
+        })
+        s.stdout.on("close", () => {
+          w.close()
+          res(undefined)
+        })
+        s.stdout.on("error", (error) => {
+          console.error(error)
+          w.close()
+          rej(error)
+        })
+      })
+    })
+    await rm(o0)
+    await rm(o1)
   }))
 
-  await removeTempDir(context.temp)
-  await createMetaJson(context.dist)
+  await rm(temp, { recursive: true })
+  const mf = join(dist, "meta.json")
+  await writeFile(mf, JSON.stringify(sha, undefined, 2))
 }
 
 /**
@@ -123,138 +190,44 @@ async function checkUpdates() {
 
   const rawSDKJS = await fetch("https://api.github.com/repos/ONLYOFFICE/sdkjs/commits")
   const sdkjs = await rawSDKJS.json()
-  repos.sdkjs.sha = sdkjs[0].sha
+  sha.sdkjs = sdkjs[0].sha
 
   const rawSDKJSForms = await fetch("https://api.github.com/repos/ONLYOFFICE/sdkjs-forms/commits")
   const sdkjsForms = await rawSDKJSForms.json()
-  repos.sdkjsForms.sha = sdkjsForms[0].sha
+  sha.sdkjsForms = sdkjsForms[0].sha
 
-  const hasUpdate = !(meta["sdkjs"] === repos.sdkjs.sha && meta["sdkjs-forms"] === repos.sdkjsForms.sha)
-  if(!hasUpdate) {
-    console.info("No update")
-  }
+  const hasUpdate = !(meta["sdkjs"] === sha.sdkjs && meta["sdkjs-forms"] === sha.sdkjsForms)
   return hasUpdate
 }
 
-/**
- * Reads raw Json and creates processed Json in dist.
- * @param {object} context
- * @param {string} inputDir
- * @returns {Promise<void>}
- */
-async function writeToRawJson(context, inputDir) {
-  const w = createWriteStream(context.o0)
-  await new Promise((resolve, reject) => {
-    const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
-    e.stdout.on("data", (ch) => {
-      // todo: should be a better way.
-      const l = ch.toString()
-      if (
-        l.startsWith("DEBUG:") ||
-        l.startsWith(`Parsing ${inputDir}`) ||
-        l.startsWith("Finished running")
-      ) {
-        return
-      }
-      w.write(ch)
-    })
-    e.stdout.on("close", () => {
-      w.close()
-      resolve(undefined)
-    })
-    e.stdout.on("error", (error) => {
-      console.error(error)
-      w.close()
-      reject(error)
-    })
-  })
-}
-
-/**
- * Reads raw Json and creates processed Json in dist.
- * @param {object} context
- * @param {string} inputDir
- * @param {object} commit
- * @returns {Promise<void>}
- */
-async function processRawJson(context, inputDir, commit) {
-  await new Promise((res, rej) => {
-    const l = new Chain([
-      createReadStream(context.o0),
-      new Parser(),
-      new StreamArray(),
-      new ProcessJson(commit, inputDir),
-      new Disassembler(),
-      new Stringer({ makeArray: true }),
-      createWriteStream(context.o1)
-    ])
-    l.on("finish", () => {
-      const o2 = join(context.dist, `${commit.repoName}.json`)
-      const w = createWriteStream(o2)
-      const s = spawn("jq", [".", context.o1])
-      s.stdout.on("data", (chunk) => {
-        w.write(chunk)
-      })
-      s.stdout.on("close", () => {
-        w.close()
-        res(undefined)
-      })
-      s.stdout.on("error", (error) => {
-        console.error(error)
-        w.close()
-        rej(error)
-      })
-    })
-  })
-}
 
 /**
  * Downloads a file.
- * @param {string} url Download URL.
- * @param {string} path Local path to downloaded file
- * @returns {Promise<boolean>}
- */
-function downloadFile(url, path) {
-  return new Promise((resolve, reject) => {
-    http.get(url, async (res) => {
-      const file = await open(path, "w")
-      const stream = file.createWriteStream()
-      res.pipe(stream);
-      stream.on("finish", () => {
-        stream.close(() => {
-          file.close()
-          resolve(true)
-        })
-      })
-      stream.on("error", reject)
-    })
-  })
-}
-
-/**
- * Downloads files in repo.
- * @param {string} inputDir Download URL.
- * @param {object} commit Local path to downloaded file
+ * @param {string} u The URL of the file to download.
+ * @param {string} p The path of the file to save.
  * @returns {Promise<void>}
  */
-async function downloadFiles(inputDir, commit) {
-  await Promise.all(commit.files.map(async (file) => {
-    const n = dirname(file)
-    const d = join(inputDir, n)
-    await mkdir(d, { recursive: true })
-    const u = `https://raw.githubusercontent.com/ONLYOFFICE/${commit.repoName}/${commit.sha}/${file}`
-    const i = join(inputDir, file)
-    await downloadFile(u, i)
-  }))
+async function downloadFile(u, p) {
+  const res = await fetch(u)
+  if (res.body === null) {
+    throw new Error("No body")
+  }
+  const r = Readable.fromWeb(res.body)
+  const s = createWriteStream(p)
+  const w = r.pipe(s)
+  await finished(w)
 }
+
 
 class ProcessJson extends Transform {
   /**
-   * @param {object} commit
+   * @param {string} repo
+   * @param {string} commit
    * @param {string} inputDir
    */
-  constructor(commit, inputDir) {
+  constructor(repo, commit, inputDir) {
     super({ objectMode: true })
+    this.repo = repo
     this.commit = commit
     this.inputDir = inputDir
   }
@@ -266,13 +239,15 @@ class ProcessJson extends Transform {
   _transform(ch, _, cb) {
     const { value } = ch
     if ("undocumented" in value && value.undocumented) {
+
       cb(null)
-      return 
+      return
     }
 
     let path = ""
     let filename = ""
     if ("meta" in value && "path" in value.meta) {
+      // console.info("Path is missing")
       path = value.meta.path.replace(this.inputDir, "")
       delete value.meta.path
     }
@@ -287,7 +262,7 @@ class ProcessJson extends Transform {
 
     // see github schema, don't generate manually, fetch from the github api (sure?)
     // https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json
-    const file = `https://api.github.com/repos/onlyoffice/${this.commit.repoName}/contents/${f}?ref=${this.commit.sha}`
+    const file = `https://api.github.com/repos/onlyoffice/${this.repo}/contents/${f}?ref=${this.commit}`
     if (value.meta !== undefined) {
       // why file? because kind=package has the files property.
       value.meta.file = file
@@ -305,7 +280,7 @@ class ProcessJson extends Transform {
         if (f.startsWith("/")) {
           f = f.slice(1)
         }
-        return `https://api.github.com/repos/onlyoffice/${this.commit.repoName}/contents/${f}?ref=${this.commit.sha}`
+        return `https://api.github.com/repos/onlyoffice/${this.repo}/contents/${f}?ref=${this.commit}`
       })
     }
 
@@ -319,42 +294,6 @@ class ProcessJson extends Transform {
     this.push(value)
     cb(null)
   }
-}
-
-/**
- * @param {string} temp Temp dir path.
- * @returns {Promise<void>}
- */
-async function removeTempDir(temp) {
-  await Promise.all(Object.entries(repos).map(async () => {
-    await rm(temp, { recursive: true })
-  }))
-}
-
-/**
- * Creates meta at dist.
- * @param {string} dist
- * @returns {Promise<void>}
- */
-async function createMetaJson(dist) {
-  const mf = join(dist, "meta.json")
-  const mo = {
-    "sdkjs": repos.sdkjs.sha,
-    "sdkjs-forms": repos.sdkjsForms.sha,
-  }
-  await writeFile(mf, JSON.stringify(mo, undefined, 2))
-}
-
-/**
- * Creates console.
- * @param {string} dir
- * @returns {object}
- */
-function createConsole(dir) {
-  const cf = join(dir, "report.log")
-  const cs = createWriteStream(cf)
-  const c = new Console(cs, cs)
-  return c
 }
 
 main()
