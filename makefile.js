@@ -2,6 +2,7 @@
 
 /**
  * @typedef {import("node:stream").TransformCallback} TransformCallback
+ * @typedef {import("node:fs").WriteStream} WriteStream
  */
 
 import { spawn } from "node:child_process"
@@ -153,22 +154,11 @@ async function build() {
         new Stringer({ makeArray: true }),
         createWriteStream(o1)
       ])
-      l.on("finish", () => {
+      l.on("finish", async () => {
         const o2 = join(dist, `${repo}.json`)
         const w = createWriteStream(o2)
-        const s = spawn("jq", [".", o1])
-        s.stdout.on("data", (chunk) => {
-          w.write(chunk)
-        })
-        s.stdout.on("close", () => {
-          w.close()
-          res(undefined)
-        })
-        s.stdout.on("error", (error) => {
-          console.error(error)
-          w.close()
-          rej(error)
-        })
+        await jq(w, o1)
+        w.close()
       })
     })
     await rm(o0)
@@ -294,6 +284,22 @@ class ProcessJson extends Transform {
     this.push(value)
     cb(null)
   }
+}
+
+/**
+ * @param {WriteStream} w
+ * @param {string} from
+ * @returns {Promise<void>}
+ */
+async function jq(w, from) {
+  return new Promise((res, rej) => {
+    const s = spawn("jq", [".", from])
+    s.stdout.on("data", (ch) => {
+      w.write(ch)
+    })
+    s.on("close", res)
+    s.on("error", rej)
+  })
 }
 
 main()
