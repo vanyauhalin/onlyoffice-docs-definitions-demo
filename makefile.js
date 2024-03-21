@@ -358,4 +358,3 @@ function createConsole(dir) {
 }
 
 main()
-
