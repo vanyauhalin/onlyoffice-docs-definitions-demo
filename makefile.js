@@ -1,8 +1,8 @@
 // @ts-check
 
 /**
-* @typedef {import("node:stream").TransformCallback} TransformCallback
-*/
+ * @typedef {import("node:stream").TransformCallback} TransformCallback
+ */
 
 import { spawn } from "node:child_process"
 import { Console as NodeConsole } from "node:console"
@@ -20,7 +20,6 @@ import Disassembler from "stream-json/Disassembler.js"
 import Stringer from "stream-json/Stringer.js"
 import Parser from "stream-json/Parser.js"
 import { Transform } from "node:stream"
-
 
 class Console extends NodeConsole {
   /**
@@ -41,11 +40,10 @@ class Console extends NodeConsole {
 }
 
 const root = fileURLToPath(new URL(".", import.meta.url))
-const make = sade("./makefile.js")
+const console = createConsole(root)
 
 const repoName = "onlyoffice-docs-definitions-demo"
 const repoOwner = "vanyauhalin"
-
 const repos = {
   sdkjs: {
     repoName: "sdkjs",
@@ -90,17 +88,22 @@ function main() {
 async function build() {
   const hasUpdate = await checkUpdates()
   if (!hasUpdate) {
-    console.log("No update")
     return
   }
-  const temp = await createTempDir()
-  const dist = join(root, "dist")
-  console = createConsole(dist)
-  console.warn(`Temp dir created at: ${temp}`)
+
+  const context = {
+    dist: join(root, "dist"),
+    temp: ""
+  }
+  await mkdir(context.dist)
+  const tmp = join(tmpdir(), repoName)
+  const temp = await mkdtemp(tmp)
+  context.temp = temp
   
-  await createMetaJson(dist)
-  await processFiles(temp)
-  await removeTempDir(temp)
+
+  await processFiles(context)
+  await removeTempDir(context.temp)
+  await createMetaJson(context.dist)
 }
 
 /**
@@ -120,68 +123,24 @@ async function checkUpdates() {
   repos.sdkjsForms.sha = sdkjsForms[0].sha
 
   const hasUpdate = !(meta["sdkjs"] === repos.sdkjs.sha && meta["sdkjs-forms"] === repos.sdkjsForms.sha)
+  if(!hasUpdate) {
+    console.info("No update")
+  }
   return hasUpdate
 }
 
 /**
- * Creates a temporary directory.
- * @returns {Promise<string>} The path of the temporary directory.
- */
-async function createTempDir() {
-  const tmp = join(tmpdir(), repoName)
-  const temp = await mkdtemp(tmp)
-  const dist = join(root, "dist")
-  await mkdir(dist, { recursive: true })
-  return temp
-}
-
-/**
- * Creates console.
- * @param {string} dist
- * @returns {object}
- */
-function createConsole(dist) {
-  const cf = join(dist, "report.log")
-  const cs = createWriteStream(cf)
-  const c = new Console(cs, cs)
-  return c
-}
-
-/**
- * Creates meta at dist.
- * @param {string} dist
+ * @param {object} context Temp dir path.
  * @returns {Promise<void>}
  */
-async function createMetaJson(dist) {
-  const mf = join(dist, "meta.json")
-    const mo = {
-      "sdkjs": repos.sdkjs.sha,
-      "sdkjs-forms": repos.sdkjsForms.sha,
-    }
-    await writeFile(mf, JSON.stringify(mo, undefined, 2))
-}
-
-/**
- * @param {string} temp Temp dir path.
- * @returns {Promise<void>}
- */
-async function processFiles(temp) {
-  const dist = join(root, "dist")
+async function processFiles(context) {
   await Promise.all(Object.entries(repos).map(async ([, commit]) => {
-    const inputDir = join(temp, commit.sha)
+    const inputDir = join(context.temp, commit.sha)
     await mkdir(inputDir)
-    
-    await Promise.all(commit.files.map(async (file) => {
-      const n = dirname(file)
-      const d = join(inputDir, n)
-      await mkdir(d, { recursive: true })
-      const u = `https://raw.githubusercontent.com/ONLYOFFICE/${commit.repoName}/${commit.sha}/${file}`
-      const i = join(inputDir, file)
-      await downloadFile(u, i)
-      console.warn(`File from "${u}" downloaded to "${i}"`)
-    }))
 
-    const o0 = join(temp, `${commit.repoName}0.json`)
+    await downloadFiles(inputDir, commit)
+
+    const o0 = join(context.temp, `${commit.repoName}0.json`)
     const w = createWriteStream(o0)
     await new Promise((resolve, reject) => {
       const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
@@ -208,20 +167,19 @@ async function processFiles(temp) {
       })
     })
 
-    const o1 = join(temp, `${commit.repoName}1.json`)
+    const o1 = join(context.temp, `${commit.repoName}1.json`)
     await new Promise((res, rej) => {
       const l = new Chain([
         createReadStream(o0),
         new Parser(),
         new StreamArray(),
-        // to _transform
         new ProcessJson(commit, inputDir),
         new Disassembler(),
         new Stringer({ makeArray: true }),
         createWriteStream(o1)
       ])
       l.on("finish", () => {
-        const o2 = join(dist, `${commit.repoName}.json`)
+        const o2 = join(context.dist, `${commit.repoName}.json`)
         const w = createWriteStream(o2)
         const s = spawn("jq", [".", o1])
         s.stdout.on("data", (chunk) => {
@@ -264,8 +222,25 @@ function downloadFile(url, path) {
   })
 }
 
+/**
+ * Downloads files in repo.
+ * @param {string} inputDir Download URL.
+ * @param {object} commit Local path to downloaded file
+ * @returns {Promise<void>}
+ */
+async function downloadFiles(inputDir, commit) {
+  await Promise.all(commit.files.map(async (file) => {
+    const n = dirname(file)
+    const d = join(inputDir, n)
+    await mkdir(d, { recursive: true })
+    const u = `https://raw.githubusercontent.com/ONLYOFFICE/${commit.repoName}/${commit.sha}/${file}`
+    const i = join(inputDir, file)
+    await downloadFile(u, i)
+  }))
+}
+
 class ProcessJson extends Transform {
-   /**
+  /**
    * @param {object} commit
    * @param {string} inputDir
    */
@@ -274,24 +249,25 @@ class ProcessJson extends Transform {
     this.commit = commit
     this.inputDir = inputDir
   }
-    /**
+  /**
    * @param {Object} ch
    * @param {TransformCallback} cb
    * @returns {void}
    */
   _transform(ch, _, cb) {
     const { value } = ch
-    if (Object.hasOwn(value, "undocumented") && value.undocumented) {
+    if ("undocumented" in value && value.undocumented) {
       cb(null)
       return 
     }
+
     let path = ""
     let filename = ""
-    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "path")) {
+    if ("meta" in value && "path" in value.meta) {
       path = value.meta.path.replace(this.inputDir, "")
       delete value.meta.path
     }
-    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "filename")) {
+    if ("meta" in value && "filename" in value.meta) {
       filename = value.meta.filename
       delete value.meta.filename
     }
@@ -299,6 +275,7 @@ class ProcessJson extends Transform {
     if (f.startsWith("/")) {
       f = f.slice(1)
     }
+
     // see github schema, don't generate manually, fetch from the github api (sure?)
     // https://raw.githubusercontent.com/vanyauhalin/onlyoffice-docs-definitions-demo/dist/meta.json
     const file = `https://api.github.com/repos/onlyoffice/${this.commit.repoName}/contents/${f}?ref=${this.commit.sha}`
@@ -306,14 +283,14 @@ class ProcessJson extends Transform {
       // why file? because kind=package has the files property.
       value.meta.file = file
     }
-    
-    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "code")) {
+    if ("meta" in value && "code" in value.meta) {
       delete value.meta.code
     }
-    if (Object.hasOwn(value, "meta") && Object.hasOwn(value.meta, "vars")) {
+    if ("meta" in value && "vars" in value.meta) {
       delete value.meta.vars
     }
-    if (Object.hasOwn(value, "files")) {
+
+    if ("files" in value) {
       value.files = value.files.map((file) => {
         let f = file.replace(this.inputDir, "")
         if (f.startsWith("/")) {
@@ -322,19 +299,18 @@ class ProcessJson extends Transform {
         return `https://api.github.com/repos/onlyoffice/${this.commit.repoName}/contents/${f}?ref=${this.commit.sha}`
       })
     }
-    
-    if (Object.hasOwn(value, "properties") && value.properties.length === 0) {
+
+    if ("properties" in value && value.properties.length === 0) {
       delete value.properties
     }
-    if (Object.hasOwn(value, "params") && value.params.length === 0) {
+    if ("params" in value && value.params.length === 0) {
       delete value.params
     }
-    
+
     this.push(value)
     cb(null)
   }
 }
-
 
 /**
  * @param {string} temp Temp dir path.
@@ -345,6 +321,32 @@ async function removeTempDir(temp) {
     await rm(temp, { recursive: true })
   }))
   console.warn(`Temp dir at ${temp} removed`)
+}
+
+/**
+ * Creates meta at dist.
+ * @param {string} dist
+ * @returns {Promise<void>}
+ */
+async function createMetaJson(dist) {
+  const mf = join(dist, "meta.json")
+    const mo = {
+      "sdkjs": repos.sdkjs.sha,
+      "sdkjs-forms": repos.sdkjsForms.sha,
+    }
+    await writeFile(mf, JSON.stringify(mo, undefined, 2))
+}
+
+/**
+ * Creates console.
+ * @param {string} dir
+ * @returns {object}
+ */
+function createConsole(dir) {
+  const cf = join(dir, "report.log")
+  const cs = createWriteStream(cf)
+  const c = new Console(cs, cs)
+  return c
 }
 
 main()
