@@ -118,30 +118,8 @@ async function build() {
 
     const o0 = join(temp, `${commit}0.json`)
     const w = createWriteStream(o0)
-    await new Promise((resolve, reject) => {
-      const e = spawn("./node_modules/.bin/jsdoc", [inputDir, "--debug", "--explain", "--recurse"])
-      e.stdout.on("data", (ch) => {
-        // todo: should be a better way.
-        const l = ch.toString()
-        if (
-          l.startsWith("DEBUG:") ||
-          l.startsWith(`Parsing ${inputDir}`) ||
-          l.startsWith("Finished running")
-        ) {
-          return
-        }
-        w.write(ch)
-      })
-      e.stdout.on("close", () => {
-        w.close()
-        resolve(undefined)
-      })
-      e.stdout.on("error", (error) => {
-        console.error(error)
-        w.close()
-        reject(error)
-      })
-    })
+    await jsdoc(w, inputDir)
+    w.close()
 
     const o1 = join(temp, `${commit}1.json`)
     await new Promise((res, rej) => {
@@ -190,7 +168,6 @@ async function checkUpdates() {
   return hasUpdate
 }
 
-
 /**
  * Downloads a file.
  * @param {string} u The URL of the file to download.
@@ -208,6 +185,34 @@ async function downloadFile(u, p) {
   await finished(w)
 }
 
+/**
+ * @param {WriteStream} w
+ * @param {string} from
+ * @returns {Promise<void>}
+ */
+async function jsdoc(w, from) {
+  return new Promise((resolve, reject) => {
+    const e = spawn("./node_modules/.bin/jsdoc", [from, "--debug", "--explain", "--recurse"])
+    e.stdout.on("data", (ch) => {
+      // todo: should be a better way.
+      const l = ch.toString()
+      if (
+        l.startsWith("DEBUG:") ||
+        l.startsWith(`Parsing ${from}`) ||
+        l.startsWith("Finished running")
+      ) {
+        return
+      }
+      w.write(ch)
+    })
+    e.stdout.on("close", () => {
+      resolve(undefined)
+    })
+    e.stdout.on("error", (error) => {
+      reject(error)
+    })
+  })
+}
 
 class ProcessJson extends Transform {
   /**
