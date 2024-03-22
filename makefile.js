@@ -137,6 +137,10 @@ async function build() {
         const w = createWriteStream(o2)
         await jq(w, o1)
         w.close()
+        res(undefined)
+      })
+      l.on("error", (error) => {
+        rej(error)
       })
     })
     await rm(o0)
